@@ -1,0 +1,43 @@
+:root {
+  /* Semantic design tokens mapped from VS Code CSS custom properties */
+  --bg-primary: var(--vscode-sideBar-background);
+  --bg-secondary: var(--vscode-editor-background);
+  --bg-hover: var(--vscode-list-hoverBackground);
+  --bg-active: var(--vscode-list-activeSelectionBackground);
+  --bg-input: var(--vscode-input-background);
+  --bg-badge: var(--vscode-badge-background);
+  --bg-button: var(--vscode-button-background);
+  --bg-button-hover: var(--vscode-button-hoverBackground);
+  --bg-button-secondary: var(--vscode-button-secondaryBackground);
+  --bg-button-secondary-hover: var(--vscode-button-secondaryHoverBackground);
+
+  --fg-primary: var(--vscode-foreground);
+  --fg-secondary: var(--vscode-descriptionForeground);
+  --fg-muted: var(--vscode-disabledForeground);
+  --fg-active: var(--vscode-list-activeSelectionForeground);
+  --fg-input: var(--vscode-input-foreground);
+  --fg-badge: var(--vscode-badge-foreground);
+  --fg-button: var(--vscode-button-foreground);
+  --fg-button-secondary: var(--vscode-button-secondaryForeground);
+  --fg-link: var(--vscode-textLink-foreground);
+  --fg-error: var(--vscode-errorForeground);
+  --fg-warning: var(--vscode-editorWarning-foreground, #cca700);
+
+  --border-primary: var(--vscode-panel-border, var(--vscode-widget-border, transparent));
+  --border-input: var(--vscode-input-border, transparent);
+  --border-focus: var(--vscode-focusBorder);
+
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+
+  --space-xxs: 2px;
+  --space-xs: 4px;
+  --space-sm: 6px;
+  --space-md: 8px;
+  --space-lg: 12px;
+  --space-xl: 16px;
+  --space-xxl: 24px;
+
+  --icon-size: 16px;
+}
