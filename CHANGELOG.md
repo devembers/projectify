@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.3] - 2026-02-06
+
+### Added
+- Flag emojis in the emoji picker (230+ country flags)
+- Expanded icon picker from 77 to 500+ Codicons organized in 12 categories
+
+### Changed
+- Project names are now auto-titled from folder names (e.g. "my-cool-project" → "My Cool Project")
+
 ## [0.2.2] - 2026-02-06
 
 ### Added

@@ -5,7 +5,7 @@ vi.mock('os', () => ({
   homedir: vi.fn(() => '/home/testuser'),
 }));
 
-import { normalizePath, expandHome, shortenPath, getFolderName } from '../../../src/utils/fs.js';
+import { normalizePath, expandHome, shortenPath, getFolderName, prettifyName } from '../../../src/utils/fs.js';
 
 describe('fs utils', () => {
   describe('normalizePath', () => {
@@ -76,12 +76,42 @@ describe('fs utils', () => {
   });
 
   describe('getFolderName', () => {
-    it('returns the last segment of a path', () => {
-      expect(getFolderName('/home/user/projects/myapp')).toBe('myapp');
+    it('capitalizes a simple folder name', () => {
+      expect(getFolderName('/home/user/projects/facebook')).toBe('Facebook');
+    });
+
+    it('converts hyphenated names to title case', () => {
+      expect(getFolderName('/home/user/my-cool-project')).toBe('My Cool Project');
+    });
+
+    it('converts underscored names to title case', () => {
+      expect(getFolderName('/home/user/my_cool_project')).toBe('My Cool Project');
+    });
+
+    it('splits camelCase into separate words', () => {
+      expect(getFolderName('/home/user/myApp')).toBe('My App');
+    });
+
+    it('converts dot-separated names to title case', () => {
+      expect(getFolderName('/home/user/next.js')).toBe('Next Js');
     });
 
     it('works with single segment', () => {
-      expect(getFolderName('myapp')).toBe('myapp');
+      expect(getFolderName('facebook')).toBe('Facebook');
+    });
+  });
+
+  describe('prettifyName', () => {
+    it('handles already capitalized names', () => {
+      expect(prettifyName('Facebook')).toBe('Facebook');
+    });
+
+    it('handles multiple delimiters together', () => {
+      expect(prettifyName('my--project')).toBe('My Project');
+    });
+
+    it('handles mixed delimiters', () => {
+      expect(prettifyName('my-cool_project.v2')).toBe('My Cool Project V2');
     });
   });
 });

@@ -21,5 +21,23 @@ export function shortenPath(p: string): string {
 }
 
 export function getFolderName(p: string): string {
-  return path.basename(p);
+  const name = path.basename(p);
+  return prettifyName(name);
+}
+
+/**
+ * Turns a folder name into a human-friendly title.
+ * - Splits on hyphens, underscores, dots, and camelCase boundaries
+ * - Capitalizes each word
+ * - e.g. "my-cool-project" → "My Cool Project"
+ *        "facebook" → "Facebook"
+ *        "next.js" → "Next Js"
+ *        "myApp" → "My App"
+ */
+export function prettifyName(name: string): string {
+  return name
+    .replace(/([a-z])([A-Z])/g, '$1 $2')   // camelCase → separate words
+    .replace(/[-_.]+/g, ' ')                 // delimiters → spaces
+    .replace(/\b\w/g, (c) => c.toUpperCase()) // capitalize each word
+    .trim();
 }
