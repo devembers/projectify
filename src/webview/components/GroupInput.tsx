@@ -6,9 +6,10 @@ interface GroupInputProps {
   existingGroups: string[];
   className?: string;
   placeholder?: string;
+  onSubmit?: () => void;
 }
 
-export function GroupInput({ value, onChange, existingGroups, className, placeholder }: GroupInputProps) {
+export function GroupInput({ value, onChange, existingGroups, className, placeholder, onSubmit }: GroupInputProps) {
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -31,6 +32,12 @@ export function GroupInput({ value, onChange, existingGroups, className, placeho
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !showSuggestions && onSubmit) {
+            e.preventDefault();
+            onSubmit();
+          }
+        }}
         onFocus={() => setFocused(true)}
         onBlur={() => setTimeout(() => setFocused(false), 150)}
       />

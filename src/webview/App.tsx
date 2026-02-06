@@ -19,7 +19,7 @@ interface PersistedState {
 }
 
 const DEFAULT_CONFIG: WebViewConfig = {
-  sortBy: 'recency',
+  sortBy: 'name',
 };
 
 export function App() {

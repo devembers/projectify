@@ -232,6 +232,27 @@ export class ProjectWebViewProvider implements vscode.WebviewViewProvider {
         break;
       }
 
+      case 'action:renameGroup': {
+        const { oldPath, newName } = msg;
+        // Build the new path: replace the last segment of oldPath with newName
+        const segments = oldPath.split('/');
+        segments[segments.length - 1] = newName;
+        const newPath = segments.join('/');
+        // Update all projects whose group starts with oldPath
+        const allProjects = this.store.getAllProjects();
+        for (const p of allProjects) {
+          if (!p.group) continue;
+          if (p.group === oldPath) {
+            await this.store.updateProject(p.id, { group: newPath });
+          } else if (p.group.startsWith(oldPath + '/')) {
+            await this.store.updateProject(p.id, {
+              group: newPath + p.group.slice(oldPath.length),
+            });
+          }
+        }
+        break;
+      }
+
       case 'action:updateProjectConfig': {
         const { customIcon, emoji, remoteHost, group, ...rest } = msg.updates;
         const updates: Partial<Project> = { ...rest };
@@ -319,7 +340,7 @@ export class ProjectWebViewProvider implements vscode.WebviewViewProvider {
   private getConfig(): WebViewConfig {
     const config = vscode.workspace.getConfiguration('projectify');
     return {
-      sortBy: config.get('sortBy', 'recency'),
+      sortBy: config.get('sortBy', 'name'),
     };
   }
 

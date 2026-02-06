@@ -1,144 +1,144 @@
 {
-  "name": "projectify",
-  "displayName": "Projectify",
-  "description": "Zero-configuration project manager for VS Code — organize, group, tag, and switch between projects from the sidebar.",
-  "version": "0.1.0",
-  "publisher": "DevEmbers",
-  "icon": "resources/icons/icon.png",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/devembers/projectify"
-  },
-  "homepage": "https://devembers.com",
-  "bugs": {
-    "url": "https://github.com/devembers/projectify/issues"
-  },
-  "engines": {
-    "vscode": "^1.85.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "keywords": [
-    "project",
-    "manager",
-    "switcher",
-    "workspace",
-    "groups",
-    "tags",
-    "favorites",
-    "ssh",
-    "remote"
-  ],
-  "activationEvents": [
-    "onStartupFinished"
-  ],
-  "main": "./dist/extension.js",
-  "extensionDependencies": [],
-  "contributes": {
-    "commands": [
-      {
-        "command": "projectify.editStorageFile",
-        "title": "Edit Projects File",
-        "category": "Projectify",
-        "icon": "$(edit)"
-      }
+    "name": "projectify",
+    "displayName": "Projectify",
+    "description": "Zero-configuration project manager for VS Code — organize, group, tag, and switch between projects from the sidebar.",
+    "version": "0.2.0",
+    "publisher": "DevEmbers",
+    "icon": "resources/icons/icon.png",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/devembers/projectify"
+    },
+    "homepage": "https://devembers.com",
+    "bugs": {
+        "url": "https://github.com/devembers/projectify/issues"
+    },
+    "engines": {
+        "vscode": "^1.85.0"
+    },
+    "categories": [
+        "Other"
     ],
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "projectify",
-          "title": "Projectify",
-          "icon": "resources/icons/projectify.svg"
-        }
-      ]
-    },
-    "views": {
-      "projectify": [
-        {
-          "id": "projectifyView",
-          "name": "Projectify",
-          "type": "webview"
-        }
-      ]
-    },
-    "menus": {
-      "view/title": [
-        {
-          "command": "projectify.editStorageFile",
-          "when": "view == projectifyView",
-          "group": "navigation@1"
-        }
-      ]
-    },
-    "keybindings": [
-      {
-        "command": "projectifyView.focus",
-        "key": "ctrl+alt+p",
-        "mac": "cmd+alt+p"
-      }
+    "keywords": [
+        "project",
+        "manager",
+        "switcher",
+        "workspace",
+        "groups",
+        "tags",
+        "favorites",
+        "ssh",
+        "remote"
     ],
-    "configuration": {
-      "title": "Projectify",
-      "properties": {
-        "projectify.sortBy": {
-          "type": "string",
-          "enum": [
-            "name",
-            "recency"
-          ],
-          "default": "recency",
-          "description": "How to sort projects."
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./dist/extension.js",
+    "extensionDependencies": [],
+    "contributes": {
+        "commands": [
+            {
+                "command": "projectify.editStorageFile",
+                "title": "Edit Projects File",
+                "category": "Projectify",
+                "icon": "$(edit)"
+            }
+        ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "projectify",
+                    "title": "Projectify",
+                    "icon": "resources/icons/projectify.svg"
+                }
+            ]
         },
-        "projectify.openBehavior": {
-          "type": "string",
-          "enum": [
-            "currentWindow",
-            "newWindow",
-            "ask"
-          ],
-          "default": "currentWindow",
-          "description": "Default behavior when opening a project."
+        "views": {
+            "projectify": [
+                {
+                    "id": "projectifyView",
+                    "name": "Projectify",
+                    "type": "webview"
+                }
+            ]
         },
-        "projectify.showStatusBar": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show current project in the status bar."
+        "menus": {
+            "view/title": [
+                {
+                    "command": "projectify.editStorageFile",
+                    "when": "view == projectifyView",
+                    "group": "navigation@1"
+                }
+            ]
+        },
+        "keybindings": [
+            {
+                "command": "projectifyView.focus",
+                "key": "ctrl+alt+p",
+                "mac": "cmd+alt+p"
+            }
+        ],
+        "configuration": {
+            "title": "Projectify",
+            "properties": {
+                "projectify.sortBy": {
+                    "type": "string",
+                    "enum": [
+                        "name",
+                        "recency"
+                    ],
+                    "default": "name",
+                    "description": "How to sort projects."
+                },
+                "projectify.openBehavior": {
+                    "type": "string",
+                    "enum": [
+                        "currentWindow",
+                        "newWindow",
+                        "ask"
+                    ],
+                    "default": "currentWindow",
+                    "description": "Default behavior when opening a project."
+                },
+                "projectify.showStatusBar": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Show current project in the status bar."
+                }
+            }
         }
-      }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run build",
+        "build": "node esbuild.js --production",
+        "watch": "node esbuild.js --watch",
+        "lint": "eslint src/",
+        "typecheck": "tsc --noEmit",
+        "test:unit": "vitest run",
+        "test:watch": "vitest",
+        "pretest:integration": "npm run build",
+        "test:integration": "vscode-test",
+        "package": "vsce package"
+    },
+    "devDependencies": {
+        "@types/node": "^20.11.0",
+        "@types/react": "^19.2.13",
+        "@types/react-dom": "^19.2.3",
+        "@types/vscode": "^1.85.0",
+        "@typescript-eslint/eslint-plugin": "^7.0.0",
+        "@typescript-eslint/parser": "^7.0.0",
+        "@vscode/test-cli": "^0.0.10",
+        "@vscode/test-electron": "^2.4.0",
+        "@vscode/vsce": "^3.0.0",
+        "esbuild": "^0.25.0",
+        "eslint": "^8.57.0",
+        "prettier": "^3.2.0",
+        "typescript": "~5.5.0",
+        "vitest": "^3.2.0"
+    },
+    "dependencies": {
+        "@vscode/codicons": "^0.0.44",
+        "react": "^19.2.4",
+        "react-dom": "^19.2.4"
     }
-  },
-  "scripts": {
-    "vscode:prepublish": "npm run build",
-    "build": "node esbuild.js --production",
-    "watch": "node esbuild.js --watch",
-    "lint": "eslint src/",
-    "typecheck": "tsc --noEmit",
-    "test:unit": "vitest run",
-    "test:watch": "vitest",
-    "pretest:integration": "npm run build",
-    "test:integration": "vscode-test",
-    "package": "vsce package"
-  },
-  "devDependencies": {
-    "@types/node": "^20.11.0",
-    "@types/react": "^19.2.13",
-    "@types/react-dom": "^19.2.3",
-    "@types/vscode": "^1.85.0",
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "@typescript-eslint/parser": "^7.0.0",
-    "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.0",
-    "@vscode/vsce": "^3.0.0",
-    "esbuild": "^0.25.0",
-    "eslint": "^8.57.0",
-    "prettier": "^3.2.0",
-    "typescript": "~5.5.0",
-    "vitest": "^3.2.0"
-  },
-  "dependencies": {
-    "@vscode/codicons": "^0.0.44",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4"
-  }
 }

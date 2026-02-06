@@ -20,7 +20,7 @@ const TABS: { mode: ViewMode; label: string; icon: string }[] = [
   { mode: 'tags', label: 'Tags', icon: 'tag' },
 ];
 
-const SORT_CYCLE: SortBy[] = ['recency', 'name'];
+const SORT_CYCLE: SortBy[] = ['name', 'recency'];
 const SORT_LABELS: Record<SortBy, string> = {
   recency: 'Recent',
   name: 'Name',

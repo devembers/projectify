@@ -213,6 +213,7 @@ export function ProjectConfigPanel({ project, tags, projects, onClose }: Project
               value={group}
               onChange={setGroup}
               existingGroups={existingGroups}
+              onSubmit={handleSave}
             />
             <span className="project-config__hint">Use / to create nested groups</span>
           </div>

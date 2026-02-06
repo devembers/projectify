@@ -4,6 +4,7 @@ import type { WebViewConfig } from '../../shared/protocol.js';
 import { ProjectCard } from './ProjectCard.js';
 import { GroupHeader } from './GroupHeader.js';
 import { sortProjects, isCurrent, isActive } from '../utils/projectHelpers.js';
+import { postMessage } from '../vscodeApi.js';
 
 interface ProjectListProps {
   projects: Project[];
@@ -170,6 +171,9 @@ export function ProjectList({
             count={totalCount}
             collapsed={collapsed}
             onToggle={(recursive) => onToggleGroup(node.path, recursive)}
+            onRename={(newName) =>
+              postMessage({ type: 'action:renameGroup', oldPath: node.path, newName })
+            }
           />
         </div>
         {!collapsed && (

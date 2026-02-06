@@ -172,6 +172,12 @@ export interface ActionBrowseLocalFolderMessage {
   type: 'action:browseLocalFolder';
 }
 
+export interface ActionRenameGroupMessage {
+  type: 'action:renameGroup';
+  oldPath: string;
+  newName: string;
+}
+
 export interface ActionUpdateProjectConfigMessage {
   type: 'action:updateProjectConfig';
   projectId: string;
@@ -210,6 +216,7 @@ export type WebviewToHostMessage =
   | ActionAddLocalProjectMessage
   | ActionAddSshProjectMessage
   | ActionBrowseLocalFolderMessage
+  | ActionRenameGroupMessage
   | ActionUpdateProjectConfigMessage;
 
 // ── Shared config subset pushed to webview ──
