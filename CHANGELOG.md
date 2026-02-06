@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.4] - 2026-02-06
+
+### Added
+- Name field in the Add Project form — auto-derived from the folder path, fully editable before saving
+- Emoji search by name (e.g. search "japan", "rocket", "dog" instead of scrolling)
+- Press Enter in Name or Path fields to save project configuration
+- Group input shows existing groups as suggestions when focused
+
+### Fixed
+- Removed nested scrollbars from the icon picker grid
+- Codicon icons not vertically centered in their containers (close button, etc.)
+- KEY/value placeholder text misaligned in environment variable inputs
+- Action button tooltips clipped behind the toolbar on top project rows
+- Clearing the group field and pressing Enter now correctly saves
+
 ## [0.2.3] - 2026-02-06
 
 ### Added

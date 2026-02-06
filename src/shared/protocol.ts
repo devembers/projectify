@@ -158,6 +158,7 @@ export interface ActionSetProjectIconMessage {
 export interface ActionAddLocalProjectMessage {
   type: 'action:addLocalProject';
   path: string;
+  name?: string;
   group?: string;
 }
 
@@ -165,6 +166,7 @@ export interface ActionAddSshProjectMessage {
   type: 'action:addSshProject';
   host: string;
   remotePath: string;
+  name?: string;
   group?: string;
 }
 

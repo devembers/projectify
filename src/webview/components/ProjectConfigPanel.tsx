@@ -109,6 +109,7 @@ export function ProjectConfigPanel({ project, tags, projects, onClose }: Project
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter' && name.trim()) handleSave(); }}
             />
           </div>
 
@@ -229,6 +230,7 @@ export function ProjectConfigPanel({ project, tags, projects, onClose }: Project
               type="text"
               value={rootPath}
               onChange={(e) => setRootPath(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter' && rootPath.trim()) handleSave(); }}
             />
           </div>
           {project.remoteHost && (

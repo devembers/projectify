@@ -33,7 +33,7 @@ export function GroupInput({ value, onChange, existingGroups, className, placeho
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' && !showSuggestions && onSubmit) {
+          if (e.key === 'Enter' && onSubmit) {
             e.preventDefault();
             onSubmit();
           }

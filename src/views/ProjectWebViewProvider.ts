@@ -196,7 +196,7 @@ export class ProjectWebViewProvider implements vscode.WebviewViewProvider {
         break;
 
       case 'action:addLocalProject': {
-        const project = await this.store.addProject(msg.path);
+        const project = await this.store.addProject(msg.path, msg.name);
         if (msg.group) {
           await this.store.updateProject(project.id, { group: msg.group });
         }
@@ -208,7 +208,7 @@ export class ProjectWebViewProvider implements vscode.WebviewViewProvider {
         if (msg.group) {
           updates.group = msg.group;
         }
-        const project = await this.store.addProject(msg.remotePath);
+        const project = await this.store.addProject(msg.remotePath, msg.name);
         await this.store.updateProject(project.id, updates);
         break;
       }

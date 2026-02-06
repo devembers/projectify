@@ -13,7 +13,6 @@ export function IconButton({ icon, title, onClick, danger, className }: IconButt
       className={`icon-button ${danger ? 'icon-button--danger' : ''} ${className ?? ''}`}
       title={title}
       aria-label={title}
-      data-tooltip={title}
       onClick={(e) => {
         e.stopPropagation();
         onClick(e);

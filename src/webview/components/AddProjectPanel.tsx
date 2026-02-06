@@ -37,9 +37,22 @@ interface AddProjectPanelProps {
 
 type Tab = 'local' | 'ssh';
 
+/** Derive a pretty display name from a file path (browser-safe, no Node.js path). */
+function prettifyPath(p: string): string {
+  const trimmed = p.replace(/\/+$/, '');
+  const basename = trimmed.split('/').pop() || trimmed;
+  return basename
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/[-_.]+/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .trim();
+}
+
 export function AddProjectPanel({ sshHosts, browsedPath, projects, onClose }: AddProjectPanelProps) {
   const [tab, setTab] = useState<Tab>('local');
   const [localPath, setLocalPath] = useState('');
+  const [name, setName] = useState('');
+  const [nameManuallyEdited, setNameManuallyEdited] = useState(false);
   const [selectedTarget, setSelectedTarget] = useState('');
   const [remotePath, setRemotePath] = useState('');
   const resolvedHosts = useMemo(() => deduplicateHosts(sshHosts), [sshHosts]);
@@ -60,12 +73,23 @@ export function AddProjectPanel({ sshHosts, browsedPath, projects, onClose }: Ad
     }
   }, [browsedPath]);
 
+  // Auto-derive project name from path unless user has manually edited it
+  const activePath = tab === 'local' ? localPath : remotePath;
+  useEffect(() => {
+    if (!nameManuallyEdited && activePath.trim()) {
+      setName(prettifyPath(activePath));
+    } else if (!nameManuallyEdited && !activePath.trim()) {
+      setName('');
+    }
+  }, [activePath, nameManuallyEdited]);
+
   const handleAddLocal = () => {
     const trimmed = localPath.trim();
     if (!trimmed) return;
     postMessage({
       type: 'action:addLocalProject',
       path: trimmed,
+      name: name.trim() || undefined,
       group: group.trim() || undefined,
     });
     onClose();
@@ -79,6 +103,7 @@ export function AddProjectPanel({ sshHosts, browsedPath, projects, onClose }: Ad
       type: 'action:addSshProject',
       host,
       remotePath: path,
+      name: name.trim() || undefined,
       group: group.trim() || undefined,
     });
     onClose();
@@ -90,6 +115,17 @@ export function AddProjectPanel({ sshHosts, browsedPath, projects, onClose }: Ad
 
   const sharedFields = (
     <>
+      <label className="add-panel__label">Name</label>
+      <input
+        className="add-panel__input"
+        type="text"
+        placeholder="Project display name"
+        value={name}
+        onChange={(e) => {
+          setName(e.target.value);
+          setNameManuallyEdited(true);
+        }}
+      />
       <label className="add-panel__label">Group</label>
       <GroupInput
         className="add-panel__input"
@@ -113,13 +149,13 @@ export function AddProjectPanel({ sshHosts, browsedPath, projects, onClose }: Ad
       <div className="add-panel__tabs">
         <button
           className={`add-panel__tab ${tab === 'local' ? 'add-panel__tab--active' : ''}`}
-          onClick={() => setTab('local')}
+          onClick={() => { setTab('local'); setNameManuallyEdited(false); }}
         >
           <span className="codicon codicon-folder" /> Local
         </button>
         <button
           className={`add-panel__tab ${tab === 'ssh' ? 'add-panel__tab--active' : ''}`}
-          onClick={() => setTab('ssh')}
+          onClick={() => { setTab('ssh'); setNameManuallyEdited(false); }}
         >
           <span className="codicon codicon-remote" /> SSH
         </button>

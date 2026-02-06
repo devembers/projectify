@@ -54,4 +54,5 @@ a:hover {
 
 .codicon {
   font-size: var(--icon-size) !important;
+  line-height: 1 !important;
 }

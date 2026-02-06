@@ -63,7 +63,7 @@ export class ProjectStore {
     return undefined;
   }
 
-  async addProject(rootPath: string): Promise<Project> {
+  async addProject(rootPath: string, name?: string): Promise<Project> {
     const existing = this.getProjectByPath(rootPath);
     if (existing) {
       this._onDidChange.fire();
@@ -72,7 +72,7 @@ export class ProjectStore {
 
     const project: Project = {
       id: crypto.randomUUID(),
-      name: getFolderName(rootPath),
+      name: name || getFolderName(rootPath),
       rootPath,
       tags: [],
       isFavorite: false,
