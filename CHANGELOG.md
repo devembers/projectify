@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.2] - 2026-02-06
+
+### Added
+- Elastic License 2.0
+- Open VSX registry publishing support
+- Marketplace Q&A section enabled
+
+### Changed
+- Improved marketplace discoverability (expanded keywords, optimized display name and description)
+
 ## [0.2.1] - 2026-02-06
 
 ### Added

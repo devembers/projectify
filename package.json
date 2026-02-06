@@ -1,8 +1,9 @@
 {
     "name": "projectify",
-    "displayName": "Projectify",
-    "description": "Zero-configuration project manager for VS Code — organize, group, tag, and switch between projects from the sidebar.",
-    "version": "0.2.1",
+    "displayName": "Projectify - Project Manager",
+    "description": "Zero-configuration project manager for VS Code — organize, group, tag, bookmark, and quickly switch between projects, folders, and workspaces from the sidebar.",
+    "version": "0.2.2",
+    "license": "Elastic-2.0",
     "publisher": "DevEmbers",
     "icon": "resources/icons/icon.png",
     "repository": {
@@ -10,6 +11,11 @@
         "url": "https://github.com/devembers/projectify"
     },
     "homepage": "https://devembers.com",
+    "qna": "marketplace",
+    "galleryBanner": {
+        "color": "#1e1e1e",
+        "theme": "dark"
+    },
     "bugs": {
         "url": "https://github.com/devembers/projectify/issues"
     },
@@ -28,7 +34,23 @@
         "tags",
         "favorites",
         "ssh",
-        "remote"
+        "remote",
+        "project-manager",
+        "project-switcher",
+        "project-organizer",
+        "folder",
+        "organizer",
+        "sidebar",
+        "productivity",
+        "workflow",
+        "bookmarks",
+        "recent-projects",
+        "quick-switch",
+        "open-folder",
+        "workspace-manager",
+        "navigation",
+        "monorepo",
+        "multi-root"
     ],
     "activationEvents": [
         "onStartupFinished"
@@ -118,7 +140,10 @@
         "test:watch": "vitest",
         "pretest:integration": "npm run build",
         "test:integration": "vscode-test",
-        "package": "vsce package"
+        "package": "vsce package",
+        "publish:marketplace": "vsce publish",
+        "publish:ovsx": "ovsx publish projectify-$npm_package_version.vsix",
+        "publish": "npm run package && npm run publish:marketplace && npm run publish:ovsx"
     },
     "devDependencies": {
         "@types/node": "^20.11.0",
@@ -132,6 +157,7 @@
         "@vscode/vsce": "^3.0.0",
         "esbuild": "^0.25.0",
         "eslint": "^8.57.0",
+        "ovsx": "^0.10.9",
         "prettier": "^3.2.0",
         "typescript": "~5.5.0",
         "vitest": "^3.2.0"
