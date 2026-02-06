@@ -66,7 +66,7 @@ export class SSHConfigParser implements vscode.Disposable {
  * Simple SSH config parser. Handles standard Host blocks.
  * Ignores wildcard patterns (*, *.domain).
  */
-function parseSSHConfig(content: string): SSHHost[] {
+export function parseSSHConfig(content: string): SSHHost[] {
   const hosts: SSHHost[] = [];
   // A single Host line can list multiple aliases (e.g. "Host pn51 b backend").
   // All subsequent settings apply to each alias, so we track an array.

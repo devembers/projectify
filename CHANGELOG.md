@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.1] - 2026-02-06
+
+### Added
+- Alt+click a project row to open it in a new window
+
 ## [0.2.0] - 2026-02-06
 
 ### Added

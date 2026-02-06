@@ -70,7 +70,7 @@ export async function switchProject(
   });
 }
 
-function sortForQuickPick(projects: Project[]): Project[] {
+export function sortForQuickPick(projects: Project[]): Project[] {
   return [...projects].sort((a, b) => {
     // Favorites first
     if (a.isFavorite !== b.isFavorite) {
@@ -83,7 +83,7 @@ function sortForQuickPick(projects: Project[]): Project[] {
   });
 }
 
-function formatRelativeTime(timestamp: number): string {
+export function formatRelativeTime(timestamp: number): string {
   const diff = Date.now() - timestamp;
   const minutes = Math.floor(diff / 60_000);
   if (minutes < 1) {

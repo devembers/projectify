@@ -2,7 +2,7 @@
     "name": "projectify",
     "displayName": "Projectify",
     "description": "Zero-configuration project manager for VS Code — organize, group, tag, and switch between projects from the sidebar.",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "publisher": "DevEmbers",
     "icon": "resources/icons/icon.png",
     "repository": {

@@ -22,8 +22,8 @@ export function ProjectCard({ project, tags, isCurrent, isActive, onConfigure, r
   const [confirmingRemove, setConfirmingRemove] = useState(false);
   const [showIconPicker, setShowIconPicker] = useState(false);
 
-  const handleOpen = () => {
-    postMessage({ type: 'action:openProject', projectId: project.id });
+  const handleOpen = (e: React.MouseEvent) => {
+    postMessage({ type: 'action:openProject', projectId: project.id, newWindow: e.altKey });
   };
 
   const handleDoubleClick = (e: React.MouseEvent) => {
