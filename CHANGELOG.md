@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.9] - 2026-02-07
+
+### Changed
+
+- Updated DevEmbers logo
+
 ## [0.2.8] - 2026-02-07
 
 ### Fixed
