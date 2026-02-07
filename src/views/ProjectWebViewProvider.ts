@@ -56,13 +56,11 @@ export class ProjectWebViewProvider implements vscode.WebviewViewProvider {
     this.disposables.push(
       this.store.onDidChange(() => this.pushProjects()),
       this.store.onDidChangeTags(() => this.pushTags()),
+      this.store.onDidChangeRemote(() => this.pushRemotePaths()),
       this.windowTracker.onDidChange(() => this.pushActiveProjects()),
       this.sshParser.onDidChange(() => this.pushSshHosts()),
       vscode.workspace.onDidChangeConfiguration((e) => {
-        if (
-          e.affectsConfiguration('projectify.sortBy') ||
-          e.affectsConfiguration('projectify.remoteDefaultPaths')
-        ) {
+        if (e.affectsConfiguration('projectify.sortBy')) {
           this.pushConfig();
         }
       }),
@@ -260,16 +258,23 @@ export class ProjectWebViewProvider implements vscode.WebviewViewProvider {
       }
 
       case 'action:connectRemoteHost': {
-        const remotePaths: Record<string, string> = vscode.workspace
-          .getConfiguration('projectify')
-          .get('remoteDefaultPaths', {});
-        const folderPath = remotePaths[msg.host] ?? '/';
+        const hosts = await this.sshParser.getHosts();
+        const host = hosts.find((h) => h.host === msg.host);
+        let folderPath = this.store.getRemotePath(msg.host);
+        if (!folderPath) {
+          folderPath = host?.user ? `/home/${host.user}` : '/';
+        }
         const uri = vscode.Uri.parse(
           `vscode-remote://ssh-remote+${msg.host}${folderPath}`,
         );
         await vscode.commands.executeCommand('vscode.openFolder', uri, {
           forceNewWindow: true,
         });
+        break;
+      }
+
+      case 'action:setRemotePath': {
+        await this.store.setRemotePath(msg.host, msg.path);
         break;
       }
 
@@ -372,6 +377,7 @@ export class ProjectWebViewProvider implements vscode.WebviewViewProvider {
       currentProjectPath: this.getCurrentProjectPath(),
       activeProjectPaths,
       sshHosts,
+      remotePaths: this.store.getRemotePaths(),
     });
   }
 
@@ -413,6 +419,13 @@ export class ProjectWebViewProvider implements vscode.WebviewViewProvider {
     });
   }
 
+  private pushRemotePaths(): void {
+    this.postMessage({
+      type: 'state:remotePaths',
+      remotePaths: this.store.getRemotePaths(),
+    });
+  }
+
   private postMessage(msg: HostToWebviewMessage): void {
     this.webviewView?.webview.postMessage(msg);
   }
@@ -423,7 +436,6 @@ export class ProjectWebViewProvider implements vscode.WebviewViewProvider {
     const config = vscode.workspace.getConfiguration('projectify');
     return {
       sortBy: config.get('sortBy', 'name'),
-      remoteDefaultPaths: config.get<Record<string, string>>('remoteDefaultPaths', {}),
     };
   }
 

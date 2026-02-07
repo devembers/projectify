@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.2.7] - 2026-02-07
+
+### Added
+
+- Editable remote paths on Remote tab cards — click the path line to edit inline, Enter/blur saves, Escape cancels
+- Remote paths persisted in `projects.json` under a `remote` key, surviving reloads and config changes
+- Edit icon appears on card hover to indicate the path is clickable
+
+### Changed
+
+- Remote path source changed from `#RemotePath` SSH config comments to stored paths in `projects.json`
+- Path priority: stored path > derived `/home/<user>` > `/` (with warning icon)
+- Derived paths no longer include a trailing slash (e.g. `/home/alice` instead of `/home/alice/`)
+
+### Removed
+
+- `#RemotePath` SSH config comment parsing — paths are now managed directly in the UI
+
 ## [0.2.6] - 2026-02-07
 
 ### Added

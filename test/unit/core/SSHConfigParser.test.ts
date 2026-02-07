@@ -137,4 +137,12 @@ describe('parseSSHConfig', () => {
     expect(hosts).toHaveLength(1);
     expect(hosts[0].hostname).toBe('10.0.0.1');
   });
+
+  it('ignores #RemotePath comments (no remotePath field)', () => {
+    const config = `Host myserver\n  HostName 10.0.0.1\n  User admin\n  #RemotePath /home/admin/projects`;
+    const hosts = parseSSHConfig(config);
+    expect(hosts).toHaveLength(1);
+    expect(hosts[0]).toEqual({ host: 'myserver', hostname: '10.0.0.1', user: 'admin' });
+    expect('remotePath' in hosts[0]).toBe(false);
+  });
 });

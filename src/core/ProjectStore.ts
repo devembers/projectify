@@ -9,12 +9,16 @@ export class ProjectStore {
   private storage: JsonStorage;
   private projects: Map<string, Project> = new Map();
   private tags: Tag[] = [];
+  private remotePaths: Record<string, string> = {};
 
   private readonly _onDidChange = new vscode.EventEmitter<void>();
   readonly onDidChange = this._onDidChange.event;
 
   private readonly _onDidChangeTags = new vscode.EventEmitter<void>();
   readonly onDidChangeTags = this._onDidChangeTags.event;
+
+  private readonly _onDidChangeRemote = new vscode.EventEmitter<void>();
+  readonly onDidChangeRemote = this._onDidChangeRemote.event;
 
   constructor(storage: JsonStorage) {
     this.storage = storage;
@@ -31,6 +35,7 @@ export class ProjectStore {
       this.projects.set(p.id, p);
     }
     this.tags = data.tags;
+    this.remotePaths = data.remote ?? {};
     log(`Store loaded: ${this.projects.size} projects, ${this.tags.length} tags`);
     this._onDidChange.fire();
     this._onDidChangeTags.fire();
@@ -41,6 +46,7 @@ export class ProjectStore {
       version: 1,
       projects: this.getAllProjects(),
       tags: this.tags,
+      remote: this.remotePaths,
     };
     await this.storage.save(data);
   }
@@ -197,8 +203,28 @@ export class ProjectStore {
     }
   }
 
+  // Remote path management
+  getRemotePaths(): Record<string, string> {
+    return { ...this.remotePaths };
+  }
+
+  getRemotePath(alias: string): string | undefined {
+    return this.remotePaths[alias];
+  }
+
+  async setRemotePath(alias: string, path: string): Promise<void> {
+    if (path) {
+      this.remotePaths[alias] = path;
+    } else {
+      delete this.remotePaths[alias];
+    }
+    await this.persist();
+    this._onDidChangeRemote.fire();
+  }
+
   dispose(): void {
     this._onDidChange.dispose();
     this._onDidChangeTags.dispose();
+    this._onDidChangeRemote.dispose();
   }
 }

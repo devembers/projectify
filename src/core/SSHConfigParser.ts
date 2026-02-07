@@ -75,10 +75,9 @@ export function parseSSHConfig(content: string): SSHHost[] {
   for (const rawLine of content.split('\n')) {
     const line = rawLine.trim();
 
-    // Skip comments and empty lines
-    if (!line || line.startsWith('#')) {
-      continue;
-    }
+    if (!line) continue;
+
+    if (line.startsWith('#')) continue;
 
     // Split on first whitespace or =
     const match = line.match(/^(\S+)\s*[=\s]\s*(.+)$/);

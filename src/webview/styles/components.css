@@ -1548,23 +1548,46 @@
   text-overflow: ellipsis;
 }
 
-.remote-view__detail-pair {
-  display: contents;
-}
-
-.remote-view__path-hint {
+.remote-view__card-path {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-xs);
   padding-left: calc(16px + var(--space-sm));
   font-size: 11px;
-  color: var(--fg-muted);
-  line-height: 1.4;
+  color: var(--fg-secondary);
+  cursor: pointer;
 }
 
-.remote-view__path-hint code {
+.remote-view__card-path--warning {
+  color: var(--fg-warning, var(--vscode-editorWarning-foreground, #cca700));
+}
+
+.remote-view__card-path code {
   font-family: var(--vscode-editor-font-family, monospace);
-  font-size: 10px;
+  font-size: 11px;
+}
+
+.remote-view__path-input {
+  flex: 1;
+  padding: 1px var(--space-xs);
+  background: var(--bg-input);
+  color: var(--fg-input);
+  border: 1px solid var(--border-focus);
+  border-radius: var(--radius-sm);
+  outline: none;
+  font-family: var(--vscode-editor-font-family, monospace);
+  font-size: 11px;
+}
+
+.remote-view__edit-icon {
+  font-size: 12px;
+  color: var(--fg-muted);
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.remote-view__card:hover .remote-view__edit-icon {
+  opacity: 1;
 }
 
 .remote-view__empty {

@@ -16,6 +16,7 @@ export interface StateInitMessage {
   currentProjectPath: string | null;
   activeProjectPaths: string[];
   sshHosts: SSHHost[];
+  remotePaths: Record<string, string>;
 }
 
 export interface StateProjectsMessage {
@@ -59,6 +60,11 @@ export interface StatePathCompletionsMessage {
   requestId: number;
 }
 
+export interface StateRemotePathsMessage {
+  type: 'state:remotePaths';
+  remotePaths: Record<string, string>;
+}
+
 export type HostToWebviewMessage =
   | StateInitMessage
   | StateProjectsMessage
@@ -68,7 +74,8 @@ export type HostToWebviewMessage =
   | StateSshHostsMessage
   | StateBrowsedPathMessage
   | ShowAddPanelMessage
-  | StatePathCompletionsMessage;
+  | StatePathCompletionsMessage
+  | StateRemotePathsMessage;
 
 // ── Webview → Host messages ──
 
@@ -209,6 +216,12 @@ export interface ActionConnectRemoteHostMessage {
   host: string;
 }
 
+export interface ActionSetRemotePathMessage {
+  type: 'action:setRemotePath';
+  host: string;
+  path: string;
+}
+
 export interface ActionCompletePathMessage {
   type: 'action:completePath';
   input: string;
@@ -239,11 +252,11 @@ export type WebviewToHostMessage =
   | ActionRenameGroupMessage
   | ActionUpdateProjectConfigMessage
   | ActionConnectRemoteHostMessage
+  | ActionSetRemotePathMessage
   | ActionCompletePathMessage;
 
 // ── Shared config subset pushed to webview ──
 
 export interface WebViewConfig {
   sortBy: SortBy;
-  remoteDefaultPaths: Record<string, string>;
 }

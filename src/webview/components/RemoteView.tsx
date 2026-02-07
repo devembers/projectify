@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useRef, useEffect } from 'react';
 import type { SSHHost } from '../../types.js';
 import { postMessage } from '../vscodeApi.js';
 
@@ -7,7 +7,6 @@ interface ResolvedHost {
   user?: string;
   port?: number;
   identityFile?: string;
-  options?: Record<string, string>;
   aliases: string[];
 }
 
@@ -25,7 +24,6 @@ function deduplicateHosts(hosts: SSHHost[]): ResolvedHost[] {
         user: h.user,
         port: h.port,
         identityFile: h.identityFile,
-        options: h.options,
         aliases: [h.host],
       });
     }
@@ -33,21 +31,42 @@ function deduplicateHosts(hosts: SSHHost[]): ResolvedHost[] {
   return Array.from(map.values());
 }
 
-/** Format a camelCase or PascalCase SSH keyword into a readable label. */
-function formatKey(key: string): string {
-  return key.replace(/([a-z])([A-Z])/g, '$1 $2');
-}
-
 interface RemoteViewProps {
   sshHosts: SSHHost[];
-  remoteDefaultPaths: Record<string, string>;
+  remotePaths: Record<string, string>;
 }
 
-export function RemoteView({ sshHosts, remoteDefaultPaths }: RemoteViewProps) {
+export function RemoteView({ sshHosts, remotePaths }: RemoteViewProps) {
   const hosts = useMemo(() => deduplicateHosts(sshHosts), [sshHosts]);
+  const [editingHost, setEditingHost] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editingHost && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editingHost]);
 
   const handleConnect = (alias: string) => {
     postMessage({ type: 'action:connectRemoteHost', host: alias });
+  };
+
+  const startEditing = (alias: string, currentPath: string) => {
+    setEditingHost(alias);
+    setEditValue(currentPath);
+  };
+
+  const saveEdit = () => {
+    if (editingHost) {
+      postMessage({ type: 'action:setRemotePath', host: editingHost, path: editValue.trim() });
+      setEditingHost(null);
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingHost(null);
   };
 
   if (hosts.length === 0) {
@@ -66,8 +85,11 @@ export function RemoteView({ sshHosts, remoteDefaultPaths }: RemoteViewProps) {
         {hosts.map((h) => {
           const primaryAlias = h.aliases[0];
           const showPort = h.port != null && h.port !== 22;
-          const configuredPath = remoteDefaultPaths[primaryAlias];
-          const displayPath = configuredPath ?? '/';
+          const storedPath = remotePaths[primaryAlias];
+          const derivedPath = h.user ? `/home/${h.user}` : null;
+          const displayPath = storedPath ?? derivedPath ?? '/';
+          const isWarning = !storedPath && !derivedPath;
+          const isEditing = editingHost === primaryAlias;
 
           return (
             <button
@@ -80,30 +102,49 @@ export function RemoteView({ sshHosts, remoteDefaultPaths }: RemoteViewProps) {
                 <span className="codicon codicon-remote" />
                 <span className="remote-view__card-title">{h.aliases.join(', ')}</span>
               </div>
+              <div
+                className={`remote-view__card-path${isWarning ? ' remote-view__card-path--warning' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!isEditing) {
+                    startEditing(primaryAlias, displayPath);
+                  }
+                }}
+              >
+                {isEditing ? (
+                  <input
+                    ref={inputRef}
+                    className="remote-view__path-input"
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        saveEdit();
+                      } else if (e.key === 'Escape') {
+                        cancelEdit();
+                      }
+                    }}
+                    onBlur={saveEdit}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                ) : (
+                  <>
+                    {isWarning && <span className="codicon codicon-warning" />}
+                    Opens <code>{displayPath}</code>
+                    <span className="remote-view__edit-icon codicon codicon-edit" />
+                  </>
+                )}
+              </div>
               <dl className="remote-view__card-details">
                 <dt>Host</dt>
                 <dd>{h.user ? `${h.user}@${h.hostname}` : h.hostname}{showPort ? `:${h.port}` : ''}</dd>
-                <dt>Path</dt>
-                <dd>{displayPath}</dd>
                 {h.identityFile && (
                   <>
                     <dt>Key</dt>
                     <dd>{h.identityFile.replace(/^.*\//, '')}</dd>
                   </>
                 )}
-                {h.options && Object.entries(h.options).map(([k, v]) => (
-                  <span className="remote-view__detail-pair" key={k}>
-                    <dt>{formatKey(k)}</dt>
-                    <dd>{v}</dd>
-                  </span>
-                ))}
               </dl>
-              {!configuredPath && (
-                <div className="remote-view__path-hint">
-                  <span className="codicon codicon-info" />
-                  Opens <code>/</code> on this host. To set a custom path, configure <code>"projectify.remoteDefaultPaths"</code> in settings.
-                </div>
-              )}
             </button>
           );
         })}

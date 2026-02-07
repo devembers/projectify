@@ -21,7 +21,6 @@ interface PersistedState {
 
 const DEFAULT_CONFIG: WebViewConfig = {
   sortBy: 'name',
-  remoteDefaultPaths: {},
 };
 
 export function App() {
@@ -34,6 +33,7 @@ export function App() {
   const [currentProjectPath, setCurrentProjectPath] = useState<string | null>(null);
   const [activeProjectPaths, setActiveProjectPaths] = useState<string[]>([]);
   const [sshHosts, setSshHosts] = useState<SSHHost[]>([]);
+  const [remotePaths, setRemotePaths] = useState<Record<string, string>>({});
 
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
     const saved = persisted?.viewMode as string | undefined;
@@ -78,6 +78,7 @@ export function App() {
           setCurrentProjectPath(msg.currentProjectPath);
           setActiveProjectPaths(msg.activeProjectPaths);
           setSshHosts(msg.sshHosts);
+          setRemotePaths(msg.remotePaths);
           break;
         case 'state:projects':
           setProjects(msg.projects);
@@ -94,6 +95,9 @@ export function App() {
           break;
         case 'state:sshHosts':
           setSshHosts(msg.hosts);
+          break;
+        case 'state:remotePaths':
+          setRemotePaths(msg.remotePaths);
           break;
         case 'state:browsedPath':
           setBrowsedPath(msg.path);
@@ -271,7 +275,7 @@ export function App() {
               />
             )}
             {viewMode === 'remote' && (
-              <RemoteView sshHosts={sshHosts} remoteDefaultPaths={config.remoteDefaultPaths} />
+              <RemoteView sshHosts={sshHosts} remotePaths={remotePaths} />
             )}
           </div>
         </>

@@ -38,5 +38,6 @@ export interface StorageData {
   version: number;
   projects: Project[];
   tags: Tag[];
+  remote?: Record<string, string>;
 }
 
