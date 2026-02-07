@@ -159,7 +159,7 @@
 .tag-filter-view__projects {
   border-top: 1px solid var(--border-primary);
   margin-top: var(--space-sm);
-  padding-top: var(--space-sm);
+  padding-top: var(--space-md);
 }
 
 .tag-filter-view__management-toggle {

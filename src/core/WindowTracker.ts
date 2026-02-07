@@ -12,13 +12,16 @@ interface ActiveWindowsData {
   windows: Record<string, WindowEntry>;
 }
 
-const STALE_THRESHOLD_MS = 24 * 60 * 60 * 1000; // 24 hours
+const STALE_THRESHOLD_MS = 3 * 60 * 1000; // 3 minutes
+const HEARTBEAT_INTERVAL_MS = 60 * 1000; // 1 minute
 
 export class WindowTracker implements vscode.Disposable {
   private filePath: string;
   private watcher?: vscode.FileSystemWatcher;
   private windowId: string;
   private disposables: vscode.Disposable[] = [];
+  private heartbeatTimer?: ReturnType<typeof setInterval>;
+  private registeredPath: string | null = null;
 
   private readonly _onDidChange = new vscode.EventEmitter<void>();
   readonly onDidChange = this._onDidChange.event;
@@ -32,6 +35,13 @@ export class WindowTracker implements vscode.Disposable {
     if (!projectPath) {
       return;
     }
+    this.registeredPath = projectPath;
+    await this.writeEntry(projectPath);
+    this.startHeartbeat();
+    log(`WindowTracker: registered ${projectPath}`);
+  }
+
+  private async writeEntry(projectPath: string): Promise<void> {
     try {
       const data = await this.readFile();
       data.windows[this.windowId] = {
@@ -39,13 +49,30 @@ export class WindowTracker implements vscode.Disposable {
         timestamp: Date.now(),
       };
       await this.writeFile(data);
-      log(`WindowTracker: registered ${projectPath}`);
     } catch (err) {
-      logError('WindowTracker: register failed', err);
+      logError('WindowTracker: write entry failed', err);
+    }
+  }
+
+  private startHeartbeat(): void {
+    this.stopHeartbeat();
+    this.heartbeatTimer = setInterval(() => {
+      if (this.registeredPath) {
+        this.writeEntry(this.registeredPath);
+      }
+    }, HEARTBEAT_INTERVAL_MS);
+  }
+
+  private stopHeartbeat(): void {
+    if (this.heartbeatTimer) {
+      clearInterval(this.heartbeatTimer);
+      this.heartbeatTimer = undefined;
     }
   }
 
   async unregister(): Promise<void> {
+    this.stopHeartbeat();
+    this.registeredPath = null;
     try {
       const data = await this.readFile();
       delete data.windows[this.windowId];
@@ -112,6 +139,7 @@ export class WindowTracker implements vscode.Disposable {
   }
 
   dispose(): void {
+    this.stopHeartbeat();
     for (const d of this.disposables) {
       d.dispose();
     }

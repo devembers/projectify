@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.10] - 2026-02-07
+
+### Fixed
+
+- Active project dots not updating when windows close — stale entries lingered for 24 hours; now cleaned up within 3 minutes via a heartbeat mechanism
+- Tag view first project spacing now matches the ungrouped projects list
+
 ## [0.2.9] - 2026-02-07
 
 ### Changed
