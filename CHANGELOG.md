@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.8] - 2026-02-07
+
+### Fixed
+
+- Remote tab padding — first SSH card now has consistent spacing on all sides
+- Remote path `code` element styled with horizontal padding, reduced border-radius, and inline-block display
+- Ungrouped projects no longer touch the search bar — added top spacing when no group header precedes them
+
 ## [0.2.7] - 2026-02-07
 
 ### Added

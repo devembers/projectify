@@ -201,7 +201,11 @@ export function ProjectList({
           {!favoritesCollapsed && favorites.map((p) => renderCard(p, 1))}
         </div>
       )}
-      {ungrouped.map((p) => renderCard(p, 0))}
+      {ungrouped.length > 0 && (
+        <div className="project-list__ungrouped">
+          {ungrouped.map((p) => renderCard(p, 0))}
+        </div>
+      )}
       {roots.map((root) => renderGroupNode(root))}
     </div>
   );
