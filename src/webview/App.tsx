@@ -21,6 +21,7 @@ interface PersistedState {
 
 const DEFAULT_CONFIG: WebViewConfig = {
   sortBy: 'name',
+  remoteDefaultPaths: {},
 };
 
 export function App() {
@@ -270,7 +271,7 @@ export function App() {
               />
             )}
             {viewMode === 'remote' && (
-              <RemoteView sshHosts={sshHosts} />
+              <RemoteView sshHosts={sshHosts} remoteDefaultPaths={config.remoteDefaultPaths} />
             )}
           </div>
         </>

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import type { SSHHost, Project } from '../../types.js';
 import { postMessage } from '../vscodeApi.js';
 import { GroupInput } from './GroupInput.js';
+import { PathInput } from './PathInput.js';
 
 interface ResolvedHost {
   /** The actual hostname/IP to connect to */
@@ -172,13 +173,12 @@ export function AddProjectPanel({ sshHosts, browsedPath, projects, onClose }: Ad
         <div className="add-panel__form">
           <label className="add-panel__label">Folder Path</label>
           <div className="add-panel__input-row">
-            <input
+            <PathInput
               className="add-panel__input"
-              type="text"
               placeholder="/path/to/project"
               value={localPath}
-              onChange={(e) => setLocalPath(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleAddLocal()}
+              onChange={setLocalPath}
+              onSubmit={handleAddLocal}
             />
             <button className="add-panel__browse" onClick={handleBrowse} title="Browse">
               <span className="codicon codicon-folder-opened" />

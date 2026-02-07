@@ -20,6 +20,7 @@ export const CONFIG = {
   sortBy: `${EXTENSION_ID}.sortBy`,
   openBehavior: `${EXTENSION_ID}.openBehavior`,
   showStatusBar: `${EXTENSION_ID}.showStatusBar`,
+  remoteDefaultPaths: `${EXTENSION_ID}.remoteDefaultPaths`,
 } as const;
 
 export const VIEWS = {

@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.6] - 2026-02-07
+
+### Added
+
+- Path autocomplete in the Add Project local folder input — type a path and get directory suggestions in a dropdown
+- Fuzzy matching: prefix matches sorted first, then substring matches (top 5 shown)
+- Keyboard navigation for suggestions (Arrow keys, Enter to select, Escape to dismiss)
+- Selecting a suggestion fills the path and immediately shows subdirectories
+- Hidden directories (dotfiles) only shown when the typed fragment starts with `.`
+- Tilde expansion (`~` / `~/`) resolves to home directory
+
 ## [0.2.5] - 2026-02-07
 
 ### Added

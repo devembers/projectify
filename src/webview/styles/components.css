@@ -1426,6 +1426,68 @@
   border-radius: var(--radius-md);
 }
 
+/* ── Path input with suggestions ── */
+.path-input {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.path-input > input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.path-input__suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  margin-top: 2px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-focus);
+  border-radius: var(--radius-md);
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.path-input__suggestion {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-xs) var(--space-md);
+  font-size: 12px;
+  color: var(--fg-input);
+  text-align: left;
+  border-radius: 0;
+}
+
+.path-input__suggestion:hover,
+.path-input__suggestion--highlighted {
+  background: var(--bg-hover);
+}
+
+.path-input__suggestion:first-child {
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.path-input__suggestion:last-child {
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.path-input__suggestion:only-child {
+  border-radius: var(--radius-md);
+}
+
+.path-input__suggestion-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
 /* ── Remote view ── */
 .remote-view {
   display: flex;
@@ -1488,6 +1550,21 @@
 
 .remote-view__detail-pair {
   display: contents;
+}
+
+.remote-view__path-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  padding-left: calc(16px + var(--space-sm));
+  font-size: 11px;
+  color: var(--fg-muted);
+  line-height: 1.4;
+}
+
+.remote-view__path-hint code {
+  font-family: var(--vscode-editor-font-family, monospace);
+  font-size: 10px;
 }
 
 .remote-view__empty {

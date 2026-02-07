@@ -1,4 +1,7 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
 import { ProjectStore } from '../core/ProjectStore.js';
 import { WindowTracker } from '../core/WindowTracker.js';
 import { SSHConfigParser } from '../core/SSHConfigParser.js';
@@ -56,7 +59,10 @@ export class ProjectWebViewProvider implements vscode.WebviewViewProvider {
       this.windowTracker.onDidChange(() => this.pushActiveProjects()),
       this.sshParser.onDidChange(() => this.pushSshHosts()),
       vscode.workspace.onDidChangeConfiguration((e) => {
-        if (e.affectsConfiguration('projectify.sortBy')) {
+        if (
+          e.affectsConfiguration('projectify.sortBy') ||
+          e.affectsConfiguration('projectify.remoteDefaultPaths')
+        ) {
           this.pushConfig();
         }
       }),
@@ -254,8 +260,12 @@ export class ProjectWebViewProvider implements vscode.WebviewViewProvider {
       }
 
       case 'action:connectRemoteHost': {
+        const remotePaths: Record<string, string> = vscode.workspace
+          .getConfiguration('projectify')
+          .get('remoteDefaultPaths', {});
+        const folderPath = remotePaths[msg.host] ?? '/';
         const uri = vscode.Uri.parse(
-          `vscode-remote://ssh-remote+${msg.host}/`,
+          `vscode-remote://ssh-remote+${msg.host}${folderPath}`,
         );
         await vscode.commands.executeCommand('vscode.openFolder', uri, {
           forceNewWindow: true,
@@ -273,6 +283,68 @@ export class ProjectWebViewProvider implements vscode.WebviewViewProvider {
         await this.store.updateProject(msg.projectId, updates);
         break;
       }
+
+      case 'action:completePath': {
+        const suggestions = await this.completePath(msg.input);
+        this.postMessage({
+          type: 'state:pathCompletions',
+          suggestions,
+          requestId: msg.requestId,
+        });
+        break;
+      }
+    }
+  }
+
+  private async completePath(input: string): Promise<string[]> {
+    try {
+      if (!input) return [];
+
+      // Expand ~ to home directory
+      let expanded = input;
+      if (expanded === '~' || expanded.startsWith('~/')) {
+        expanded = os.homedir() + expanded.slice(1);
+      }
+
+      // Split into parent directory and query fragment
+      let parentDir: string;
+      let query: string;
+      if (expanded.endsWith('/') || expanded.endsWith(path.sep)) {
+        parentDir = expanded;
+        query = '';
+      } else {
+        parentDir = path.dirname(expanded);
+        query = path.basename(expanded).toLowerCase();
+      }
+
+      const entries = await fs.promises.readdir(parentDir, { withFileTypes: true });
+      const dirs = entries.filter((e) => {
+        if (!e.isDirectory()) return false;
+        // Hide dotfiles unless query starts with '.'
+        if (e.name.startsWith('.') && !query.startsWith('.')) return false;
+        return true;
+      });
+
+      // Fuzzy match and sort: prefix matches first, then includes
+      const matched = query
+        ? dirs.filter((d) => d.name.toLowerCase().includes(query))
+        : dirs;
+
+      matched.sort((a, b) => {
+        if (query) {
+          const aPrefix = a.name.toLowerCase().startsWith(query);
+          const bPrefix = b.name.toLowerCase().startsWith(query);
+          if (aPrefix && !bPrefix) return -1;
+          if (!aPrefix && bPrefix) return 1;
+        }
+        return a.name.localeCompare(b.name);
+      });
+
+      // Return top 5 as full paths with trailing separator
+      const parentNorm = parentDir.endsWith('/') ? parentDir : parentDir + '/';
+      return matched.slice(0, 5).map((d) => parentNorm + d.name + '/');
+    } catch {
+      return [];
     }
   }
 
@@ -351,6 +423,7 @@ export class ProjectWebViewProvider implements vscode.WebviewViewProvider {
     const config = vscode.workspace.getConfiguration('projectify');
     return {
       sortBy: config.get('sortBy', 'name'),
+      remoteDefaultPaths: config.get<Record<string, string>>('remoteDefaultPaths', {}),
     };
   }
 

@@ -40,9 +40,10 @@ function formatKey(key: string): string {
 
 interface RemoteViewProps {
   sshHosts: SSHHost[];
+  remoteDefaultPaths: Record<string, string>;
 }
 
-export function RemoteView({ sshHosts }: RemoteViewProps) {
+export function RemoteView({ sshHosts, remoteDefaultPaths }: RemoteViewProps) {
   const hosts = useMemo(() => deduplicateHosts(sshHosts), [sshHosts]);
 
   const handleConnect = (alias: string) => {
@@ -65,6 +66,8 @@ export function RemoteView({ sshHosts }: RemoteViewProps) {
         {hosts.map((h) => {
           const primaryAlias = h.aliases[0];
           const showPort = h.port != null && h.port !== 22;
+          const configuredPath = remoteDefaultPaths[primaryAlias];
+          const displayPath = configuredPath ?? '/';
 
           return (
             <button
@@ -80,6 +83,8 @@ export function RemoteView({ sshHosts }: RemoteViewProps) {
               <dl className="remote-view__card-details">
                 <dt>Host</dt>
                 <dd>{h.user ? `${h.user}@${h.hostname}` : h.hostname}{showPort ? `:${h.port}` : ''}</dd>
+                <dt>Path</dt>
+                <dd>{displayPath}</dd>
                 {h.identityFile && (
                   <>
                     <dt>Key</dt>
@@ -93,6 +98,12 @@ export function RemoteView({ sshHosts }: RemoteViewProps) {
                   </span>
                 ))}
               </dl>
+              {!configuredPath && (
+                <div className="remote-view__path-hint">
+                  <span className="codicon codicon-info" />
+                  Opens <code>/</code> on this host. To set a custom path, configure <code>"projectify.remoteDefaultPaths"</code> in settings.
+                </div>
+              )}
             </button>
           );
         })}

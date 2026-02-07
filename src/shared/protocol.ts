@@ -53,6 +53,12 @@ export interface ShowAddPanelMessage {
   type: 'action:showAddPanel';
 }
 
+export interface StatePathCompletionsMessage {
+  type: 'state:pathCompletions';
+  suggestions: string[];
+  requestId: number;
+}
+
 export type HostToWebviewMessage =
   | StateInitMessage
   | StateProjectsMessage
@@ -61,7 +67,8 @@ export type HostToWebviewMessage =
   | StateActiveProjectsMessage
   | StateSshHostsMessage
   | StateBrowsedPathMessage
-  | ShowAddPanelMessage;
+  | ShowAddPanelMessage
+  | StatePathCompletionsMessage;
 
 // ── Webview → Host messages ──
 
@@ -202,6 +209,12 @@ export interface ActionConnectRemoteHostMessage {
   host: string;
 }
 
+export interface ActionCompletePathMessage {
+  type: 'action:completePath';
+  input: string;
+  requestId: number;
+}
+
 export type WebviewToHostMessage =
   | ActionReadyMessage
   | ActionOpenProjectMessage
@@ -225,10 +238,12 @@ export type WebviewToHostMessage =
   | ActionBrowseLocalFolderMessage
   | ActionRenameGroupMessage
   | ActionUpdateProjectConfigMessage
-  | ActionConnectRemoteHostMessage;
+  | ActionConnectRemoteHostMessage
+  | ActionCompletePathMessage;
 
 // ── Shared config subset pushed to webview ──
 
 export interface WebViewConfig {
   sortBy: SortBy;
+  remoteDefaultPaths: Record<string, string>;
 }

@@ -2,7 +2,7 @@
     "name": "projectify",
     "displayName": "Projectify - Project Manager",
     "description": "Zero-configuration project manager for VS Code — organize, group, tag, bookmark, and quickly switch between projects, folders, and workspaces from the sidebar.",
-    "version": "0.2.5",
+    "version": "0.2.6",
     "license": "Elastic-2.0",
     "publisher": "DevEmbers",
     "icon": "resources/icons/icon.png",
@@ -126,6 +126,14 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Show current project in the status bar."
+                },
+                "projectify.remoteDefaultPaths": {
+                    "type": "object",
+                    "default": {},
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "markdownDescription": "Map SSH host aliases to default folder paths opened on connect. Example:\n```json\n{\n  \"my-server\": \"/home/alice\",\n  \"mac-box\": \"/Users/alice\"\n}\n```\nIf not set, `/` is used."
                 }
             }
         }
