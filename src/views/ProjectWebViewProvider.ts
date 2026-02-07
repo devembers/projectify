@@ -253,6 +253,16 @@ export class ProjectWebViewProvider implements vscode.WebviewViewProvider {
         break;
       }
 
+      case 'action:connectRemoteHost': {
+        const uri = vscode.Uri.parse(
+          `vscode-remote://ssh-remote+${msg.host}/`,
+        );
+        await vscode.commands.executeCommand('vscode.openFolder', uri, {
+          forceNewWindow: true,
+        });
+        break;
+      }
+
       case 'action:updateProjectConfig': {
         const { customIcon, emoji, remoteHost, group, ...rest } = msg.updates;
         const updates: Partial<Project> = { ...rest };

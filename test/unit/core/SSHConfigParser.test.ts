@@ -116,11 +116,11 @@ describe('parseSSHConfig', () => {
     expect(hosts[0].hostname).toBe('10.0.0.1');
   });
 
-  it('ignores unrecognized keywords', () => {
+  it('captures unrecognized keywords in options', () => {
     const config = `Host myserver\n  HostName 10.0.0.1\n  ProxyJump bastion`;
     const hosts = parseSSHConfig(config);
     expect(hosts).toHaveLength(1);
-    expect(hosts[0]).toEqual({ host: 'myserver', hostname: '10.0.0.1' });
+    expect(hosts[0]).toEqual({ host: 'myserver', hostname: '10.0.0.1', options: { ProxyJump: 'bastion' } });
   });
 
   it('is case-insensitive for keywords', () => {

@@ -8,8 +8,9 @@ import { EmptyState } from './components/EmptyState.js';
 import { TagFilterView } from './components/TagFilterView.js';
 import { AddProjectPanel } from './components/AddProjectPanel.js';
 import { ProjectConfigPanel } from './components/ProjectConfigPanel.js';
+import { RemoteView } from './components/RemoteView.js';
 
-export type ViewMode = 'groups' | 'tags';
+export type ViewMode = 'groups' | 'tags' | 'remote';
 
 interface PersistedState {
   viewMode: ViewMode;
@@ -35,7 +36,7 @@ export function App() {
 
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
     const saved = persisted?.viewMode as string | undefined;
-    if (saved === 'groups' || saved === 'tags') return saved;
+    if (saved === 'groups' || saved === 'tags' || saved === 'remote') return saved;
     return 'groups';
   });
   const [searchQuery, setSearchQuery] = useState(persisted?.searchQuery ?? '');
@@ -53,6 +54,13 @@ export function App() {
   useEffect(() => {
     setPersistedState<PersistedState>({ viewMode, searchQuery, collapsedGroups, selectedFilterTags });
   }, [viewMode, searchQuery, collapsedGroups, selectedFilterTags]);
+
+  // If remote tab is active but no SSH hosts exist, fall back to groups
+  useEffect(() => {
+    if (viewMode === 'remote' && sshHosts.length === 0) {
+      setViewMode('groups');
+    }
+  }, [viewMode, sshHosts]);
 
   // Listen for messages from extension host
   useEffect(() => {
@@ -219,7 +227,7 @@ export function App() {
 
   return (
     <div className="app">
-      {hasProjects || viewMode === 'tags' ? (
+      {hasProjects || viewMode === 'tags' || viewMode === 'remote' ? (
         <>
           <Toolbar
             viewMode={viewMode}
@@ -230,6 +238,7 @@ export function App() {
             onAddProject={() => setShowAddPanel(true)}
             allCollapsed={allCollapsed}
             onToggleAllGroups={allGroupPaths.length > 0 ? toggleAllGroups : undefined}
+            showRemoteTab={sshHosts.length > 0}
           />
           <div className="app-content">
             {viewMode === 'groups' && (
@@ -259,6 +268,9 @@ export function App() {
                 onConfigure={handleConfigure}
                 remoteAliasMap={remoteAliasMap}
               />
+            )}
+            {viewMode === 'remote' && (
+              <RemoteView sshHosts={sshHosts} />
             )}
           </div>
         </>

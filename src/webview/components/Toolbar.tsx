@@ -13,9 +13,10 @@ interface ToolbarProps {
   onAddProject: () => void;
   allCollapsed?: boolean;
   onToggleAllGroups?: () => void;
+  showRemoteTab?: boolean;
 }
 
-const TABS: { mode: ViewMode; label: string; icon: string }[] = [
+const BASE_TABS: { mode: ViewMode; label: string; icon: string }[] = [
   { mode: 'groups', label: 'Groups', icon: 'folder' },
   { mode: 'tags', label: 'Tags', icon: 'tag' },
 ];
@@ -39,7 +40,12 @@ export function Toolbar({
   onAddProject,
   allCollapsed,
   onToggleAllGroups,
+  showRemoteTab,
 }: ToolbarProps) {
+  const tabs = showRemoteTab
+    ? [...BASE_TABS, { mode: 'remote' as ViewMode, label: 'Remote', icon: 'remote' }]
+    : BASE_TABS;
+
   const cycleSortBy = () => {
     const idx = SORT_CYCLE.indexOf(config.sortBy);
     const next = SORT_CYCLE[(idx + 1) % SORT_CYCLE.length];
@@ -49,7 +55,7 @@ export function Toolbar({
   return (
     <div className="toolbar">
       <div className="toolbar-tabs">
-        {TABS.map((tab) => (
+        {tabs.map((tab) => (
           <button
             key={tab.mode}
             className={`toolbar-tab ${viewMode === tab.mode ? 'toolbar-tab--active' : ''}`}
@@ -59,6 +65,7 @@ export function Toolbar({
           </button>
         ))}
       </div>
+      {viewMode !== 'remote' && (
       <div className="toolbar-row">
         <SearchBar value={searchQuery} onChange={onSearchChange} />
         <IconButton
@@ -77,6 +84,7 @@ export function Toolbar({
           <IconButton icon="add" title="Add Project" onClick={onAddProject} />
         )}
       </div>
+      )}
     </div>
   );
 }

@@ -122,6 +122,11 @@ export function parseSSHConfig(content: string): SSHHost[] {
           case 'identityfile':
             h.identityFile = value.trim();
             break;
+          default: {
+            if (!h.options) h.options = {};
+            h.options[keyword] = value.trim();
+            break;
+          }
         }
       }
     }

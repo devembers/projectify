@@ -197,6 +197,11 @@ export interface ActionUpdateProjectConfigMessage {
   };
 }
 
+export interface ActionConnectRemoteHostMessage {
+  type: 'action:connectRemoteHost';
+  host: string;
+}
+
 export type WebviewToHostMessage =
   | ActionReadyMessage
   | ActionOpenProjectMessage
@@ -219,7 +224,8 @@ export type WebviewToHostMessage =
   | ActionAddSshProjectMessage
   | ActionBrowseLocalFolderMessage
   | ActionRenameGroupMessage
-  | ActionUpdateProjectConfigMessage;
+  | ActionUpdateProjectConfigMessage
+  | ActionConnectRemoteHostMessage;
 
 // ── Shared config subset pushed to webview ──
 

@@ -113,6 +113,11 @@ export function AddProjectPanel({ sshHosts, browsedPath, projects, onClose }: Ad
     postMessage({ type: 'action:browseLocalFolder' });
   };
 
+  const handleSubmit = () => {
+    if (tab === 'local') handleAddLocal();
+    else handleAddSsh();
+  };
+
   const sharedFields = (
     <>
       <label className="add-panel__label">Name</label>
@@ -125,6 +130,7 @@ export function AddProjectPanel({ sshHosts, browsedPath, projects, onClose }: Ad
           setName(e.target.value);
           setNameManuallyEdited(true);
         }}
+        onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
       />
       <label className="add-panel__label">Group</label>
       <GroupInput
@@ -133,6 +139,7 @@ export function AddProjectPanel({ sshHosts, browsedPath, projects, onClose }: Ad
         value={group}
         onChange={setGroup}
         existingGroups={existingGroups}
+        onSubmit={handleSubmit}
       />
     </>
   );
@@ -190,6 +197,12 @@ export function AddProjectPanel({ sshHosts, browsedPath, projects, onClose }: Ad
 
       {tab === 'ssh' && (
         <div className="add-panel__form">
+          <div className="add-panel__recommendation">
+            <span className="codicon codicon-lightbulb" />
+            <span>
+              For the best experience, connect to a remote host via the <strong>Remote</strong> tab to manage projects inside the remote host.
+            </span>
+          </div>
           <label className="add-panel__label">SSH Host</label>
           {resolvedHosts.length > 0 ? (
             <div className="add-panel__host-list">

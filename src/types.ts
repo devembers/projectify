@@ -27,6 +27,8 @@ export interface SSHHost {
   user?: string;
   port?: number;
   identityFile?: string;
+  /** Additional SSH config directives not captured by named fields. */
+  options?: Record<string, string>;
 }
 
 export type SortBy = 'name' | 'recency';

@@ -1042,6 +1042,19 @@
   font-size: 12px;
 }
 
+.add-panel__recommendation {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  font-size: 11px;
+  color: var(--fg-secondary);
+  background: color-mix(in srgb, var(--vscode-editorInfo-foreground, #3794ff) 8%, transparent);
+  border-left: 3px solid var(--vscode-editorInfo-foreground, #3794ff);
+  border-radius: var(--radius-sm);
+  line-height: 1.4;
+}
+
 .add-panel__select {
   width: 100%;
   padding: var(--space-xs) var(--space-md);
@@ -1411,4 +1424,77 @@
 
 .group-input__suggestion:only-child {
   border-radius: var(--radius-md);
+}
+
+/* ── Remote view ── */
+.remote-view {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-sm) var(--space-lg);
+}
+
+.remote-view__host-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.remote-view__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  text-align: left;
+  transition: background-color 0.1s, border-color 0.1s;
+}
+
+.remote-view__card:hover {
+  background: var(--bg-hover);
+  border-color: var(--fg-muted);
+}
+
+.remote-view__card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--fg-primary);
+}
+
+.remote-view__card-details {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1px var(--space-md);
+  padding-left: calc(16px + var(--space-sm));
+  font-size: 11px;
+  margin: 0;
+}
+
+.remote-view__card-details dt {
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+.remote-view__card-details dd {
+  color: var(--fg-secondary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.remote-view__detail-pair {
+  display: contents;
+}
+
+.remote-view__empty {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  color: var(--fg-muted);
+  font-size: 12px;
 }
