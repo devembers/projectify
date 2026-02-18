@@ -4,13 +4,7 @@ import { postMessage } from '../vscodeApi.js';
 import { IconButton } from './IconButton.js';
 import { EditDialog } from './EditDialog.js';
 import { ConfirmDialog } from './ConfirmDialog.js';
-
-const TAG_COLORS = [
-  '#4fc1ff', '#4ec9b0', '#ce9178', '#c586c0',
-  '#dcdcaa', '#d7ba7d', '#9cdcfe', '#569cd6',
-  '#f44747', '#6a9955', '#b5cea8', '#e06c75',
-  '#d19a66', '#98c379', '#61afef', '#c678dd',
-];
+import { useTheme, getTagPalette } from '../utils/themeUtils.js';
 
 interface TagManagerProps {
   tags: Tag[];
@@ -18,6 +12,8 @@ interface TagManagerProps {
 }
 
 export function TagManager({ tags, projects }: TagManagerProps) {
+  const themeKind = useTheme();
+  const tagColors = getTagPalette(themeKind);
   const [newTagName, setNewTagName] = useState('');
   const [editingTag, setEditingTag] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
@@ -89,7 +85,7 @@ export function TagManager({ tags, projects }: TagManagerProps) {
                 <div style={{ position: 'relative' }}>
                   <div
                     className="tag-manager__color"
-                    style={{ backgroundColor: tag.color ?? TAG_COLORS[0] }}
+                    style={{ backgroundColor: tag.color ?? tagColors[0] }}
                     onClick={() =>
                       setColorPickerTag(colorPickerTag === tag.name ? null : tag.name)
                     }
@@ -97,7 +93,7 @@ export function TagManager({ tags, projects }: TagManagerProps) {
                   />
                   {colorPickerTag === tag.name && (
                     <div className="color-picker">
-                      {TAG_COLORS.map((color) => (
+                      {tagColors.map((color) => (
                         <div
                           key={color}
                           className={`color-picker__swatch ${

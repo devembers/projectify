@@ -1605,3 +1605,34 @@
   color: var(--fg-muted);
   font-size: 12px;
 }
+
+/* ── Light-theme overrides ── */
+body.vscode-light .project-card__status-dot--active,
+body.vscode-high-contrast-light .project-card__status-dot--active {
+  background: var(--vscode-charts-green, #388a34);
+}
+
+body.vscode-light .add-panel__recommendation,
+body.vscode-high-contrast-light .add-panel__recommendation {
+  background: color-mix(in srgb, var(--vscode-editorInfo-foreground, #1a85ff) 8%, transparent);
+  border-left-color: var(--vscode-editorInfo-foreground, #1a85ff);
+}
+
+/* ── High-contrast overrides ── */
+body.vscode-high-contrast .tag-badge,
+body.vscode-high-contrast-light .tag-badge {
+  background: transparent !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+}
+
+body.vscode-high-contrast .filter-chip,
+body.vscode-high-contrast-light .filter-chip {
+  border-width: 1px;
+  border-style: solid;
+}
+
+body.vscode-high-contrast .project-card__status-dot,
+body.vscode-high-contrast-light .project-card__status-dot {
+  border: 1px solid currentColor;
+}

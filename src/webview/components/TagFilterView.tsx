@@ -4,6 +4,7 @@ import type { WebViewConfig } from '../../shared/protocol.js';
 import { ProjectCard } from './ProjectCard.js';
 import { TagManager } from './TagManager.js';
 import { sortProjects, isCurrent, isActive } from '../utils/projectHelpers.js';
+import { isLightColor } from '../utils/themeUtils.js';
 
 interface TagFilterViewProps {
   projects: Project[];
@@ -16,15 +17,6 @@ interface TagFilterViewProps {
   searchQuery: string;
   onConfigure: (projectId: string) => void;
   remoteAliasMap: Record<string, string[]>;
-}
-
-function isLightColor(hex: string): boolean {
-  const c = hex.replace('#', '');
-  const r = parseInt(c.substring(0, 2), 16);
-  const g = parseInt(c.substring(2, 4), 16);
-  const b = parseInt(c.substring(4, 6), 16);
-  // Perceived luminance formula
-  return (r * 299 + g * 587 + b * 114) / 1000 > 150;
 }
 
 export function TagFilterView({

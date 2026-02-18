@@ -6,6 +6,7 @@ import { EmojiPicker } from './EmojiPicker.js';
 import { EnvVarEditor } from './EnvVarEditor.js';
 import type { EnvVarDraft } from './EnvVarEditor.js';
 import { GroupInput } from './GroupInput.js';
+import { isLightColor } from '../utils/themeUtils.js';
 
 interface ProjectConfigPanelProps {
   project: Project;
@@ -193,7 +194,7 @@ export function ProjectConfigPanel({ project, tags, projects, onClose }: Project
                     key={tag.name}
                     className={`project-config__tag ${isSelected ? 'project-config__tag--selected' : ''}`}
                     onClick={() => toggleTag(tag.name)}
-                    style={isSelected && tag.color ? { backgroundColor: tag.color } : undefined}
+                    style={isSelected && tag.color ? { backgroundColor: tag.color, color: isLightColor(tag.color) ? '#1e1e1e' : '#ffffff' } : undefined}
                   >
                     {isSelected && <span className="codicon codicon-check" />}
                     {tag.name}
